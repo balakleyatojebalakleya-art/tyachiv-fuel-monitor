@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Fetch public Pальне UA data for Tyachiv. Prices remain regional estimates."""
-import json, os, re, sys
+import json, os, re, sys, math
 from datetime import datetime, timezone
 from urllib.request import Request, urlopen
 from urllib.parse import urlencode
@@ -75,6 +75,14 @@ def collect_stations(node, result):
         for item in node:
             collect_stations(item, result)
 
+def distance_km(lat1, lon1, lat2, lon2):
+    radius = 6371
+    p1, p2 = math.radians(float(lat1)), math.radians(float(lat2))
+    dp = math.radians(float(lat2) - float(lat1))
+    dl = math.radians(float(lon2) - float(lon1))
+    a = math.sin(dp / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(dl / 2) ** 2
+    return 2 * radius * math.asin(math.sqrt(a))
+
 def main():
     # Public regional endpoint and a small geographic viewport around Tyachiv.
     regional = get_json(f"{BASE}/regions/zakarpatska")
@@ -84,10 +92,21 @@ def main():
     collect_prices(regional, prices)
     stations = []
     collect_stations(station_data, stations)
-    # Deduplicate by name and coordinates.
+    # Keep stations with a useful real name and within roughly 5 km of Tyachiv.
+    # The upstream bbox can include nearby villages and generic map placeholders.
     unique = {}
+    generic_names = {"азс", "заправка", "fuel", "gas station", "petrol station"}
     for station in stations:
-        key = (station["name"].strip().lower(), station.get("latitude"), station.get("longitude"))
+        name = station["name"].strip()
+        lat, lon = station.get("latitude"), station.get("longitude")
+        if name.lower() in generic_names or lat is None or lon is None:
+            continue
+        try:
+            if distance_km(48.011, 23.570, lat, lon) > 5:
+                continue
+        except (TypeError, ValueError):
+            continue
+        key = (name.lower(), round(float(lat), 5), round(float(lon), 5))
         unique[key] = station
     stations = sorted(unique.values(), key=lambda x: x["name"].lower())
     payload = {
