@@ -1,7 +1,7 @@
 {
   "city": "Тячів",
   "region": "Закарпатська область",
-  "updatedAt": "2026-11-19T17:43:33.886303+00:00",
+  "updatedAt": "2026-11-19T17:56:23.109131+00:00",
   "source": "Пальне UA",
   "sourceUrl": "https://20.com.ua/",
   "sourceStatus": "connected",
@@ -14,62 +14,6 @@
     "LPG": 64.9
   },
   "stations": [
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 47.9983752,
-      "longitude": 23.7255476,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 48.001129,
-      "longitude": 23.6725178,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 48.0039546,
-      "longitude": 23.6544143,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 48.0564062,
-      "longitude": 23.5013677,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 48.0666182,
-      "longitude": 23.4569088,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 48.0716121,
-      "longitude": 23.4512968,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 48.1022398,
-      "longitude": 23.405493,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "АЗС",
-      "address": "Тячів",
-      "latitude": 48.1169117,
-      "longitude": 23.7604523,
-      "source": "OpenStreetMap"
-    },
     {
       "name": "АЗС UKRNAFTA",
       "address": "Армійська вулиця 123-А",
@@ -92,13 +36,6 @@
       "source": "OpenStreetMap"
     },
     {
-      "name": "АЗС WOG",
-      "address": "Тячів",
-      "latitude": 48.1128807,
-      "longitude": 23.7713438,
-      "source": "OpenStreetMap"
-    },
-    {
       "name": "АЗС БРСМ-Нафта",
       "address": "Варош-Вейг",
       "latitude": 48.0104532,
@@ -106,24 +43,10 @@
       "source": "OpenStreetMap"
     },
     {
-      "name": "АЗС Маркет",
-      "address": "Тячів",
-      "latitude": 48.1168329,
-      "longitude": 23.3792142,
-      "source": "OpenStreetMap"
-    },
-    {
       "name": "АЗС ОККО",
       "address": "Тячів",
       "latitude": 48.0213806,
       "longitude": 23.5507077,
-      "source": "OpenStreetMap"
-    },
-    {
-      "name": "Новатор",
-      "address": "Тячів",
-      "latitude": 48.0533444,
-      "longitude": 23.7243632,
       "source": "OpenStreetMap"
     }
   ],
