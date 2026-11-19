@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 BASE = "https://20.com.ua/api/v1"
 OUT = "data/prices.json"
 HISTORY = "data/history.json"
+NETWORK_SLUGS = {"ukrnafta": "ukrnafta", "wog": "wog", "okko": "okko", "upg": "upg", "brsm": "brsm-nafta"}
 FUEL_KEYS = {
     "A95": {"a95", "95", "petrol95", "gasoline95", "regular"},
     "A92": {"a92", "92", "petrol92", "gasoline92"},
@@ -91,6 +92,17 @@ def main():
     station_data = get_json(f"{BASE}/stations/bbox?{bbox}")
     prices = {}
     collect_prices(regional, prices)
+    # Public network endpoints provide network-level prices where available.
+    network_prices = {}
+    for brand, slug in NETWORK_SLUGS.items():
+        try:
+            network_data = get_json(f"{BASE}/networks/{slug}")
+            found = {}
+            collect_prices(network_data, found)
+            if found:
+                network_prices[brand] = found
+        except Exception as exc:
+            print(f"Network prices unavailable for {brand}: {exc}", file=sys.stderr)
     stations = []
     collect_stations(station_data, stations)
     # Keep stations with a useful real name and within roughly 5 km of Tyachiv.
@@ -119,6 +131,7 @@ def main():
         "sourceStatus": "connected" if prices or stations else "empty",
         "priceScope": "regional_average",
         "regionalPrices": prices,
+        "networkPrices": network_prices,
         "stations": stations,
         "notes": "Ціни є середніми по Закарпатській області, а не підтвердженими цінами конкретних АЗС. Геодані АЗС: OpenStreetMap (ODbL).",
     }
