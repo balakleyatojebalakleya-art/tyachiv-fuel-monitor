@@ -1,7 +1,7 @@
 {
   "city": "Тячів",
   "region": "Закарпатська область",
-  "updatedAt": "2026-11-19T17:35:35.314545+00:00",
+  "updatedAt": "2026-11-19T17:36:08.534861+00:00",
   "source": "Пальне UA",
   "sourceUrl": "https://20.com.ua/",
   "sourceStatus": "connected",
@@ -86,14 +86,14 @@
     },
     {
       "name": "АЗС UKRNAFTA",
-      "address": "Тячів",
+      "address": "Армійська вулиця 123-А",
       "latitude": 48.0197685,
       "longitude": null,
       "source": "OpenStreetMap"
     },
     {
       "name": "АЗС UPG",
-      "address": "Тячів",
+      "address": "Армійська вулиця 125-А",
       "latitude": 48.0223479,
       "longitude": null,
       "source": "OpenStreetMap"
@@ -114,7 +114,7 @@
     },
     {
       "name": "АЗС БРСМ-Нафта",
-      "address": "Тячів",
+      "address": "Варош-Вейг",
       "latitude": 48.0104532,
       "longitude": null,
       "source": "OpenStreetMap"
