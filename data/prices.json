@@ -1,15 +1,15 @@
 {
   "city": "Тячів",
   "region": "Закарпатська область",
-  "updatedAt": "2026-11-19T17:58:29.782152+00:00",
+  "updatedAt": "2026-11-19T18:00:40.883543+00:00",
   "source": "Пальне UA",
   "sourceUrl": "https://20.com.ua/",
   "sourceStatus": "connected",
   "priceScope": "regional_average",
   "regionalPrices": {
-    "A95_PLUS": 93.9,
-    "A95": 90.9,
-    "A92": 84.9,
+    "A95_PLUS": 92.9,
+    "A95": 89.9,
+    "A92": 82.9,
     "DIESEL": 103.9,
     "LPG": 64.9
   },
