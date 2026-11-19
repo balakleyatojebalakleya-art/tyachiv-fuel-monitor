@@ -116,16 +116,23 @@ function renderStations(){
  }).join(""):'<div class="empty">Список АЗС тимчасово недоступний.</div>';
 }
 document.querySelectorAll(".fuel-card").forEach(card=>card.addEventListener("click",()=>{selected=card.dataset.fuel;renderPrices();renderHistory();}));
-Promise.all([
- fetch("./data/prices.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("prices");return r.json();}),
- fetch("./data/history.json",{cache:"no-store"}).then(r=>r.ok?r.json():[]).catch(()=>[])
-]).then(([d,h])=>{
- data=d;history=Array.isArray(h)?h:[];
- document.querySelector("#updated").textContent=data.updatedAt?"Оновлено: "+new Date(data.updatedAt).toLocaleString("uk-UA"):"Час оновлення невідомий";
- renderPrices();renderHistory();renderStations();
-}).catch(()=>{
- document.querySelector("#updated").textContent="Не вдалося завантажити дані";
- document.querySelector("#stations").innerHTML='<div class="empty">Перевір з’єднання та онови сторінку.</div>';
-});
+async function loadData(){
+ try{
+  const [d,h]=await Promise.all([
+   fetch("./data/prices.json?refresh="+Date.now(),{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("prices");return r.json();}),
+   fetch("./data/history.json?refresh="+Date.now(),{cache:"no-store"}).then(r=>r.ok?r.json():[]).catch(()=>[])
+  ]);
+  data=d;history=Array.isArray(h)?h:[];
+  document.querySelector("#updated").textContent=data.updatedAt?"Оновлено: "+new Date(data.updatedAt).toLocaleString("uk-UA"):"Час оновлення невідомий";
+  renderPrices();renderHistory();renderStations();
+ }catch(error){
+  if(!data.updatedAt){
+   document.querySelector("#updated").textContent="Не вдалося завантажити дані";
+   document.querySelector("#stations").innerHTML='<div class="empty">Перевір з’єднання та онови сторінку.</div>';
+  }
+ }
+}
+loadData();
+setInterval(loadData,5*60*1000);
 </script>
 </body></html>
