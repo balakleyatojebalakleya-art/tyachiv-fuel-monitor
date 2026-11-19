@@ -57,7 +57,7 @@ def collect_stations(node, result):
         if name:
             geom = node.get("geometry") or {}
             coords = geom.get("coordinates") if isinstance(geom, dict) else None
-            address_parts = [props.get(k) for k in ("addr:street", "addr:housenumber", "addr:city")]
+            address_parts = [props.get(k) for k in ("addr:street", "addr:housenumber", "addr:city", "street", "address")]
             address = ", ".join(str(x) for x in address_parts if x)
             result.append({
                 "name": str(name),
