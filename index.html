@@ -52,6 +52,9 @@
   </section>
   <h2 class="section-title">АЗС у Тячеві</h2>
   <div class="table-wrap"><table><thead><tr><th>АЗС</th><th>Адреса</th><th>Координати</th><th>Джерело</th></tr></thead><tbody id="stations"><tr><td colspan="4" class="empty">Поки немає підтверджених даних. Наступним кроком підключимо джерела.</td></tr></tbody></table></div>
+  <h2 class="section-title">Історія середніх цін</h2>
+  <p class="meta">Історія середньої ціни по Закарпатській області. Це не архів цін окремих АЗС.</p>
+  <div class="table-wrap"><table><thead><tr><th>Дата оновлення</th><th id="history-fuel-heading">А-95, грн/л</th></tr></thead><tbody id="history"><tr><td colspan="2" class="empty">Історія накопичуватиметься після наступних оновлень.</td></tr></tbody></table></div>
   <p class="source">Ціни: Пальне UA (Minfin / Консалтингова група А-95). Геодані АЗС: OpenStreetMap contributors, ODbL. Середня ціна області не є пропозицією конкретної заправки.</p>
 </main>
 <footer><div class="wrap">Пальне Тячів · Дані: Пальне UA та OpenStreetMap · Перед заправкою перевіряйте фактичну ціну на АЗС.</div></footer>
@@ -72,13 +75,25 @@ function render(){
     return '<tr><td><span class="station">'+escapeHtml(s.name)+'</span></td><td>'+escapeHtml(s.address||"—")+'</td><td>'+escapeHtml(coords)+'</td><td>'+escapeHtml(s.source||"OpenStreetMap")+'</td></tr>';
   }).join(""):'<tr><td colspan="4" class="empty">Не вдалося отримати список АЗС у цьому районі.</td></tr>';
   document.querySelector("#updated").textContent=data.updatedAt?"Оновлено: "+new Date(data.updatedAt).toLocaleString("uk-UA"):"Дані ще не завантажено";
+  renderHistory();
   document.querySelector("#notice").innerHTML=validRegional
     ?'<strong>Увага:</strong> '+money(regional)+' за літр — середня ціна по Закарпатській області. Фактичні ціни на окремих АЗС можуть відрізнятися.'
     :'<strong>Дані про ціну поки недоступні.</strong> Показуємо лише підтверджені дані після оновлення джерела.';
 }
+function renderHistory(){
+  const rows=Array.isArray(historyData)?historyData.slice(-20).reverse():[];
+  document.querySelector("#history-fuel-heading").textContent=(labels[selected]||selected)+", грн/л";
+  document.querySelector("#history").innerHTML=rows.length?rows.map(item=>{
+    const price=Number(item.regionalPrices?.[selected]);
+    const date=item.updatedAt?new Date(item.updatedAt).toLocaleString("uk-UA"):"—";
+    return '<tr><td>'+escapeHtml(date)+'</td><td>'+ (Number.isFinite(price)&&price>0?money(price):"—") +'</td></tr>';
+  }).join(""):'<tr><td colspan="2" class="empty">Історія з’явиться після накопичення оновлень.</td></tr>';
+}
+let historyData=[];
 function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.fuel;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render();}));
 fetch("./data/prices.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("No data");return r.json();}).then(d=>{data=d;render();}).catch(()=>render());
+fetch("./data/history.json",{cache:"no-store"}).then(r=>r.ok?r.json():[]).then(d=>{historyData=Array.isArray(d)?d:[];renderHistory();}).catch(()=>{historyData=[];renderHistory();});
 </script>
 </body>
 </html>
