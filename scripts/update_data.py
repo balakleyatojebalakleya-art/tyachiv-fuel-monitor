@@ -51,19 +51,22 @@ def collect_prices(node, found):
 
 def collect_stations(node, result):
     if isinstance(node, dict):
-        # GeoJSON Feature or a station object
         props = node.get("properties") if isinstance(node.get("properties"), dict) else node
-        name = props.get("name") or props.get("brand") or props.get("operator")
-        if name:
-            geom = node.get("geometry") or {}
-            coords = geom.get("coordinates") if isinstance(geom, dict) else None
-            address_parts = [props.get(k) for k in ("addr:street", "addr:housenumber", "addr:city", "street", "address")]
+        tags = props.get("tags") if isinstance(props.get("tags"), dict) else {}
+        name = props.get("name") or props.get("brand") or props.get("operator") or tags.get("name") or tags.get("brand")
+        geom = node.get("geometry") or {}
+        coords = geom.get("coordinates") if isinstance(geom, dict) else None
+        lat = (coords[1] if isinstance(coords, list) and len(coords) > 1 else None) or props.get("lat") or props.get("latitude") or tags.get("lat")
+        lon = (coords[0] if isinstance(coords, list) and len(coords) > 1 else None) or props.get("lon") or props.get("lng") or props.get("long") or props.get("longitude") or tags.get("lon")
+        is_station = node.get("type") == "Feature" or node.get("geometry") or lat is not None or lon is not None
+        if name and is_station and str(name).strip().lower() not in {"minfin", "openstreetmap"}:
+            address_parts = [props.get(k) or tags.get(k) for k in ("addr:street", "addr:housenumber", "addr:city", "street", "address")]
             address = ", ".join(str(x) for x in address_parts if x)
             result.append({
                 "name": str(name),
                 "address": address or "Тячів",
-                "latitude": coords[1] if isinstance(coords, list) and len(coords) > 1 else props.get("lat"),
-                "longitude": coords[0] if isinstance(coords, list) and len(coords) > 1 else props.get("lon"),
+                "latitude": lat,
+                "longitude": lon,
                 "source": "OpenStreetMap",
             })
         for value in node.values():
