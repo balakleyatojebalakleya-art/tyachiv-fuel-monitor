@@ -1,6 +1,145 @@
 {
   "city": "Тячів",
-  "updatedAt": null,
-  "sourceStatus": "not_connected",
-  "stations": []
+  "region": "Закарпатська область",
+  "updatedAt": "2026-11-19T17:35:35.314545+00:00",
+  "source": "Пальне UA",
+  "sourceUrl": "https://20.com.ua/",
+  "sourceStatus": "connected",
+  "priceScope": "regional_average",
+  "regionalPrices": {
+    "A95_PLUS": 93.9,
+    "A95": 90.9,
+    "A92": 84.9,
+    "DIESEL": 103.9,
+    "LPG": 64.9
+  },
+  "stations": [
+    {
+      "name": "Minfin",
+      "address": "Тячів",
+      "latitude": null,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "OpenStreetMap",
+      "address": "Тячів",
+      "latitude": null,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 47.9983752,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 48.001129,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 48.0039546,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 48.0564062,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 48.0666182,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 48.0716121,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 48.1022398,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС",
+      "address": "Тячів",
+      "latitude": 48.1169117,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС UKRNAFTA",
+      "address": "Тячів",
+      "latitude": 48.0197685,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС UPG",
+      "address": "Тячів",
+      "latitude": 48.0223479,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС WOG",
+      "address": "Тячів",
+      "latitude": 48.0095827,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС WOG",
+      "address": "Тячів",
+      "latitude": 48.1128807,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС БРСМ-Нафта",
+      "address": "Тячів",
+      "latitude": 48.0104532,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС Маркет",
+      "address": "Тячів",
+      "latitude": 48.1168329,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "АЗС ОККО",
+      "address": "Тячів",
+      "latitude": 48.0213806,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    },
+    {
+      "name": "Новатор",
+      "address": "Тячів",
+      "latitude": 48.0533444,
+      "longitude": null,
+      "source": "OpenStreetMap"
+    }
+  ],
+  "notes": "Ціни є середніми по Закарпатській області, а не підтвердженими цінами конкретних АЗС. Геодані АЗС: OpenStreetMap (ODbL)."
 }
