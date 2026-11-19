@@ -33,7 +33,7 @@
   <div class="top"><div class="logo" aria-hidden="true">⛽</div><div><h1>Пальне Тячів</h1><p>Порівнюй ціни на пальне на місцевих АЗС</p></div></div>
 </div></header>
 <main class="wrap">
-  <div class="notice"><strong>Початковий запуск.</strong> Сайт уже створений, але автоматичне отримання цін ще не підключене. Тут не показуються вигадані ціни.</div>
+  <div class="notice" id="notice"><strong>Важливо:</strong> ціни, якщо доступні, є середніми по Закарпатській області. Вони не є підтвердженими цінами конкретної АЗС.</div>
   <div class="toolbar">
     <div class="tabs" id="fuel-tabs" aria-label="Вид пального">
       <button class="tab" data-fuel="A95" aria-pressed="true">А-95</button>
@@ -50,23 +50,31 @@
     <div class="card"><div class="label">Середня ціна</div><div class="price" id="average">—</div><div class="unit">грн / літр</div></div>
     <div class="card"><div class="label">АЗС із даними</div><div class="price" id="count">0</div><div class="unit">заправок</div></div>
   </section>
-  <h2 class="section-title">Ціни на АЗС Тячева</h2>
-  <div class="table-wrap"><table><thead><tr><th>АЗС</th><th>Ціна</th><th>Оновлено</th><th>Джерело</th></tr></thead><tbody id="stations"><tr><td colspan="4" class="empty">Поки немає підтверджених даних. Наступним кроком підключимо джерела.</td></tr></tbody></table></div>
-  <p class="source">Довідкова інформація. Перед заправкою перевіряйте ціну на стелі або колонці АЗС. <a href="https://tanqo.app/uk-ua/fuel-prices/tiachiv" target="_blank" rel="noopener noreferrer">Переглянути ціни Тячева на Tanqo</a>.</p>
+  <h2 class="section-title">АЗС у Тячеві</h2>
+  <div class="table-wrap"><table><thead><tr><th>АЗС</th><th>Адреса</th><th>Координати</th><th>Джерело</th></tr></thead><tbody id="stations"><tr><td colspan="4" class="empty">Поки немає підтверджених даних. Наступним кроком підключимо джерела.</td></tr></tbody></table></div>
+  <p class="source">Ціни: Пальне UA (Minfin / Консалтингова група А-95). Геодані АЗС: OpenStreetMap contributors, ODbL. Середня ціна області не є пропозицією конкретної заправки.</p>
 </main>
-<footer><div class="wrap">Пальне Тячів · Незалежний інформаційний проєкт · Ціни можуть відрізнятися від фактичних на АЗС.</div></footer>
+<footer><div class="wrap">Пальне Тячів · Дані: Пальне UA та OpenStreetMap · Перед заправкою перевіряйте фактичну ціну на АЗС.</div></footer>
 <script>
 const labels={A95:"А-95",A92:"А-92",A95_PLUS:"А-95+",DIESEL:"ДП",DIESEL_PLUS:"ДП+",LPG:"Газ"};
 let data={stations:[],updatedAt:null};
 let selected="A95";
 const money=n=>new Intl.NumberFormat("uk-UA",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+" ₴";
 function render(){
-  const rows=data.stations.map(s=>({...s,price:Number(s.prices?.[selected])})).filter(s=>Number.isFinite(s.price)&&s.price>0).sort((a,b)=>a.price-b.price);
-  document.querySelector("#count").textContent=rows.length;
-  document.querySelector("#lowest").textContent=rows.length?money(rows[0].price):"—";
-  document.querySelector("#average").textContent=rows.length?money(rows.reduce((a,s)=>a+s.price,0)/rows.length):"—";
-  document.querySelector("#stations").innerHTML=rows.length?rows.map(s=>'<tr><td><span class="station">'+escapeHtml(s.name)+'</span><span class="address">'+escapeHtml(s.address||"Тячів")+'</span></td><td><strong>'+money(s.price)+'</strong></td><td>'+escapeHtml(s.updatedAt||"—")+'</td><td>'+escapeHtml(s.source||"—")+'</td></tr>').join(""):'<tr><td colspan="4" class="empty">Немає підтверджених цін для цього виду пального.</td></tr>';
+  const regional=Number(data.regionalPrices?.[selected]);
+  const validRegional=Number.isFinite(regional)&&regional>0;
+  const stations=Array.isArray(data.stations)?data.stations:[];
+  document.querySelector("#count").textContent=stations.length;
+  document.querySelector("#lowest").textContent="—";
+  document.querySelector("#average").textContent=validRegional?money(regional):"—";
+  document.querySelector("#stations").innerHTML=stations.length?stations.map(s=>{
+    const coords=(s.latitude&&s.longitude)?Number(s.latitude).toFixed(5)+", "+Number(s.longitude).toFixed(5):"—";
+    return '<tr><td><span class="station">'+escapeHtml(s.name)+'</span></td><td>'+escapeHtml(s.address||"—")+'</td><td>'+escapeHtml(coords)+'</td><td>'+escapeHtml(s.source||"OpenStreetMap")+'</td></tr>';
+  }).join(""):'<tr><td colspan="4" class="empty">Не вдалося отримати список АЗС у цьому районі.</td></tr>';
   document.querySelector("#updated").textContent=data.updatedAt?"Оновлено: "+new Date(data.updatedAt).toLocaleString("uk-UA"):"Дані ще не завантажено";
+  document.querySelector("#notice").innerHTML=validRegional
+    ?'<strong>Орієнтовна ціна:</strong> '+money(regional)+' за літр — середнє значення по Закарпатській області, не ціна конкретної АЗС.'
+    :'<strong>Дані про ціну поки недоступні.</strong> Список АЗС та орієнтовні ціни з’являться після успішного оновлення джерела.';
 }
 function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.fuel;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render();}));
