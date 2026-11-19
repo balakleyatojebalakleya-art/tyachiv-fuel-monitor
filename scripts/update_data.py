@@ -7,6 +7,7 @@ from urllib.parse import urlencode
 
 BASE = "https://20.com.ua/api/v1"
 OUT = "data/prices.json"
+HISTORY = "data/history.json"
 FUEL_KEYS = {
     "A95": {"a95", "95", "petrol95", "gasoline95", "regular"},
     "A92": {"a92", "92", "petrol92", "gasoline92"},
@@ -122,6 +123,22 @@ def main():
         "notes": "Ціни є середніми по Закарпатській області, а не підтвердженими цінами конкретних АЗС. Геодані АЗС: OpenStreetMap (ODbL).",
     }
     os.makedirs("data", exist_ok=True)
+    # Keep a rolling history of regional average prices (not station-specific quotes).
+    history = []
+    if os.path.exists(HISTORY):
+        try:
+            with open(HISTORY, encoding="utf-8") as history_file:
+                loaded = json.load(history_file)
+                if isinstance(loaded, list):
+                    history = loaded
+        except (OSError, json.JSONDecodeError):
+            history = []
+    if prices:
+        history.append({"updatedAt": payload["updatedAt"], "regionalPrices": prices})
+        history = history[-365:]
+    with open(HISTORY, "w", encoding="utf-8") as history_file:
+        json.dump(history, history_file, ensure_ascii=False, indent=2)
+        history_file.write("\\n")
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(payload, f, ensure_ascii=False, indent=2)
         f.write("\n")
