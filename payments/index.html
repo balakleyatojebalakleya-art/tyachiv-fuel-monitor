@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#173d32"><meta name="description" content="Особистий календар платежів і щомісячних справ.">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml">
+<title>Мої платежі</title>
+<style>
+:root{color-scheme:light;--bg:#f3f6f4;--card:#fff;--ink:#192720;--muted:#6d7c73;--line:#e4ebe6;--green:#1d6348;--pale:#e9f4ed;--orange:#fff4df}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
+header{background:linear-gradient(130deg,#14372d,#267151);color:white;padding:28px 0 38px}.wrap{width:min(760px,calc(100% - 28px));margin:auto}
+.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:15px;background:#ffffff20;display:grid;place-items:center;font-size:25px}h1{font-size:clamp(28px,6vw,36px);line-height:1.1;margin:0;letter-spacing:-.7px}header p{margin:7px 0 0;color:#d9ebe1}
+main{padding:22px 0 48px}.today{color:var(--muted);font-size:13px;margin-bottom:14px}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:24px;margin-top:4px;letter-spacing:-.5px}
+.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:24px 0 11px}h2{font-size:20px;margin:0}.hint{font-size:12px;color:var(--muted);margin:4px 0 0}
+.task{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin:10px 0;display:flex;gap:12px;align-items:flex-start;box-shadow:0 3px 12px #163c2910}.task.done{opacity:.68}.task.done .task-name{text-decoration:line-through}.task-icon{width:42px;height:42px;border-radius:13px;background:var(--pale);display:grid;place-items:center;font-size:21px;flex:none}.task-content{flex:1;min-width:0}.task-top{display:flex;justify-content:space-between;gap:8px;align-items:start}.task-name{font-weight:750}.task-date{font-size:12px;color:var(--muted);margin-top:3px}.amount{font-weight:800;white-space:nowrap}.tag{display:inline-block;font-size:11px;padding:4px 8px;border-radius:20px;background:#f0f3f1;color:#59675f;margin-top:8px}.tag.soon{background:var(--orange);color:#855b12}.tag.done-tag{background:var(--pale);color:var(--green)}
+button{font:inherit;cursor:pointer}.done-btn{border:1px solid #cbd9d0;background:white;color:var(--green);border-radius:10px;padding:8px 11px;font-size:13px;font-weight:700;margin-top:10px}.done-btn:hover{background:var(--pale)}.done .done-btn{background:var(--pale)}
+.notice{background:var(--orange);border:1px solid #f0dfbd;border-radius:14px;padding:12px 14px;font-size:13px;color:#70541e;margin-top:18px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.secondary{border:1px solid var(--line);background:white;border-radius:11px;padding:10px 13px;color:var(--ink);font-size:13px;font-weight:650}
+footer{color:var(--muted);font-size:12px;padding:18px 0;border-top:1px solid var(--line)}
+@media(max-width:420px){.task{padding:13px}.summary{gap:8px}.stat{padding:12px}.stat strong{font-size:21px}.task-icon{width:38px;height:38px}}
+</style></head>
+<body>
+<header><div class="wrap"><div class="brand"><div class="logo">📅</div><div><h1>Мої платежі</h1><p>Твій особистий календар щомісячних справ</p></div></div></div></header>
+<main class="wrap">
+<div class="today" id="today"></div>
+<div class="summary"><div class="stat"><small>Найближчий платіж / справа</small><strong id="next-date">—</strong></div><div class="stat"><small>Фіксована сума на місяць</small><strong>4 000 грн</strong></div></div>
+<div class="section-title"><div><h2>Щомісячні нагадування</h2><p class="hint">Натискай «Виконано» після кожної справи</p></div></div>
+<div id="tasks"></div>
+<div class="notice"><strong>Про нагадування.</strong> Список і позначки зберігаються на цьому пристрої. Ця версія показує найближчі справи, але поки не надсилає гарантовані сповіщення, коли браузер повністю закритий. Відкривай додаток, щоб перевіряти календар.</div>
+<div class="actions"><button class="secondary" id="reset">Скинути позначки цього місяця</button><button class="secondary" id="install" hidden>Встановити додаток</button></div>
+</main><footer><div class="wrap">«Мої платежі» · Дані зберігаються локально в браузері цього пристрою.</div></footer>
+<script>
+const tasks=[
+{id:"water",day:10,icon:"💧",name:"Передати показники води",kind:"Показники"},
+{id:"utilities",day:10,icon:"🧾",name:"Оплата комунальних послуг",kind:"Оплата"},
+{id:"payment",day:28,icon:"💳",name:"Оплата",amount:4000,kind:"Платіж"},
+{id:"gas",day:28,icon:"🔥",name:"Передати показники газу",kind:"Показники"},
+{id:"light",day:28,icon:"💡",name:"Передати показники світла",kind:"Показники"}
+];
+const monthKey=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+const storageKey="my-payments-done-v1";
+let done={};try{done=JSON.parse(localStorage.getItem(storageKey)||"{}")||{}}catch(e){done={}}
+const now=new Date();
+document.querySelector("#today").textContent=now.toLocaleDateString("uk-UA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
+function dueDate(day,base=now){let d=new Date(base.getFullYear(),base.getMonth(),day);if(d<new Date(base.getFullYear(),base.getMonth(),base.getDate()))d=new Date(base.getFullYear(),base.getMonth()+1,day);return d}
+function fmt(d){return d.toLocaleDateString("uk-UA",{day:"numeric",month:"long"})}
+function render(){
+ const mk=monthKey(now), list=tasks.map(t=>({...t,due:dueDate(t.day),isDone:!!done[mk+"-"+t.id]})).sort((a,b)=>a.due-b.due);
+ const upcoming=list.find(t=>!t.isDone);
+ document.querySelector("#next-date").textContent=upcoming?fmt(upcoming.due):"Усе виконано";
+ document.querySelector("#tasks").innerHTML=list.map(t=>{
+  const key=mk+"-"+t.id, status=t.isDone?"Виконано":(t.due.toDateString()===now.toDateString()?"Сьогодні":("До "+fmt(t.due)));
+  return '<article class="task '+(t.isDone?"done":"")+'"><div class="task-icon">'+t.icon+'</div><div class="task-content"><div class="task-top"><div><div class="task-name">'+t.name+'</div><div class="task-date">Щомісяця, '+t.day+' числа</div></div>'+(t.amount?'<div class="amount">4 000 грн</div>':'')+'</div><span class="tag '+(t.isDone?"done-tag":(t.due.toDateString()===now.toDateString()?"soon":""))+'">'+status+'</span><br><button class="done-btn" data-key="'+key+'">'+(t.isDone?"Скасувати позначку":"✓ Виконано")+'</button></div></article>';
+ }).join("");
+ document.querySelectorAll("[data-key]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.key;if(done[k])delete done[k];else done[k]=true;localStorage.setItem(storageKey,JSON.stringify(done));render()}));
+}
+document.querySelector("#reset").addEventListener("click",()=>{if(!confirm("Скинути всі позначки виконання за цей місяць?"))return;const prefix=monthKey(now)+"-";Object.keys(done).filter(k=>k.startsWith(prefix)).forEach(k=>delete done[k]);localStorage.setItem(storageKey,JSON.stringify(done));render()});
+render();
+let installPrompt;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;const b=document.querySelector("#install");b.hidden=false;b.onclick=async()=>{installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;b.hidden=true}});
+if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
+</script></body></html>
