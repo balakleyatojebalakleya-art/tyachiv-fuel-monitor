@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123c2d">
+  <meta name="description" content="Моніторинг цін на пальне на АЗС міста Тячів.">
+  <title>Пальне Тячів — моніторинг цін</title>
+  <style>
+    :root{color-scheme:light;--green:#123c2d;--green2:#1d6247;--bg:#f3f6f4;--ink:#17231d;--muted:#6b7770;--line:#e1e8e3;--white:#fff;--accent:#d9f2e3}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+    header{background:linear-gradient(135deg,var(--green),#205b41);color:white;padding:28px 18px 34px}
+    .wrap{max-width:1080px;margin:auto;padding:0 18px}.top{display:flex;align-items:center;gap:14px}.logo{width:48px;height:48px;border-radius:15px;background:#ffffff1c;display:grid;place-items:center;font-size:27px}
+    h1{font-size:clamp(25px,5vw,36px);line-height:1.15;margin:0}header p{color:#d7e9de;margin:8px 0 0}
+    main{padding:24px 0 50px}.notice{background:#fff8e7;border:1px solid #f1dfae;color:#72551a;border-radius:12px;padding:12px 14px;font-size:14px;margin-bottom:18px}
+    .toolbar{display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin:16px 0}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}.tab,button{border:1px solid var(--line);background:white;border-radius:999px;padding:9px 15px;font:inherit;cursor:pointer;color:var(--ink)}
+    .tab[aria-pressed=true]{background:var(--green);border-color:var(--green);color:white}
+    .meta{font-size:13px;color:var(--muted)}
+    .summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+    .card{background:var(--white);border:1px solid var(--line);border-radius:16px;padding:17px;box-shadow:0 3px 12px #173d2910}
+    .label{font-size:13px;color:var(--muted)}.price{font-size:27px;font-weight:750;letter-spacing:-.5px;margin-top:4px}.unit{font-size:12px;color:var(--muted)}
+    .section-title{font-size:20px;margin:25px 0 12px}.table-wrap{overflow-x:auto;background:white;border:1px solid var(--line);border-radius:15px}
+    table{border-collapse:collapse;width:100%;min-width:620px}th,td{text-align:left;padding:13px 15px;border-bottom:1px solid var(--line);white-space:nowrap}th{font-size:12px;color:var(--muted);font-weight:650;background:#f9fbf9}tr:last-child td{border-bottom:0}
+    .station{font-weight:700}.address{display:block;color:var(--muted);font-size:12px;font-weight:400}.empty{text-align:center;color:var(--muted);padding:28px}
+    .source{font-size:12px;color:var(--muted);margin-top:18px}.source a{color:var(--green2)}
+    footer{padding:22px 0;color:var(--muted);font-size:12px;border-top:1px solid var(--line)}
+    @media(max-width:620px){.summary{grid-template-columns:1fr}.card{padding:14px}.price{font-size:25px}.toolbar{align-items:flex-start}}
+  </style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="top"><div class="logo" aria-hidden="true">⛽</div><div><h1>Пальне Тячів</h1><p>Порівнюй ціни на пальне на місцевих АЗС</p></div></div>
+</div></header>
+<main class="wrap">
+  <div class="notice"><strong>Початковий запуск.</strong> Сайт уже створений, але автоматичне отримання цін ще не підключене. Тут не показуються вигадані ціни.</div>
+  <div class="toolbar">
+    <div class="tabs" id="fuel-tabs" aria-label="Вид пального">
+      <button class="tab" data-fuel="A95" aria-pressed="true">А-95</button>
+      <button class="tab" data-fuel="A92" aria-pressed="false">А-92</button>
+      <button class="tab" data-fuel="A95_PLUS" aria-pressed="false">А-95+</button>
+      <button class="tab" data-fuel="DIESEL" aria-pressed="false">ДП</button>
+      <button class="tab" data-fuel="DIESEL_PLUS" aria-pressed="false">ДП+</button>
+      <button class="tab" data-fuel="LPG" aria-pressed="false">Газ</button>
+    </div>
+    <div class="meta" id="updated">Дані ще не завантажено</div>
+  </div>
+  <section class="summary" aria-label="Підсумок">
+    <div class="card"><div class="label">Найнижча ціна</div><div class="price" id="lowest">—</div><div class="unit">грн / літр</div></div>
+    <div class="card"><div class="label">Середня ціна</div><div class="price" id="average">—</div><div class="unit">грн / літр</div></div>
+    <div class="card"><div class="label">АЗС із даними</div><div class="price" id="count">0</div><div class="unit">заправок</div></div>
+  </section>
+  <h2 class="section-title">Ціни на АЗС Тячева</h2>
+  <div class="table-wrap"><table><thead><tr><th>АЗС</th><th>Ціна</th><th>Оновлено</th><th>Джерело</th></tr></thead><tbody id="stations"><tr><td colspan="4" class="empty">Поки немає підтверджених даних. Наступним кроком підключимо джерела.</td></tr></tbody></table></div>
+  <p class="source">Довідкова інформація. Перед заправкою перевіряйте ціну на стелі або колонці АЗС. <a href="https://tanqo.app/uk-ua/fuel-prices/tiachiv" target="_blank" rel="noopener noreferrer">Переглянути ціни Тячева на Tanqo</a>.</p>
+</main>
+<footer><div class="wrap">Пальне Тячів · Незалежний інформаційний проєкт · Ціни можуть відрізнятися від фактичних на АЗС.</div></footer>
+<script>
+const labels={A95:"А-95",A92:"А-92",A95_PLUS:"А-95+",DIESEL:"ДП",DIESEL_PLUS:"ДП+",LPG:"Газ"};
+let data={stations:[],updatedAt:null};
+let selected="A95";
+const money=n=>new Intl.NumberFormat("uk-UA",{minimumFractionDigits:2,maximumFractionDigits:2}).format(n)+" ₴";
+function render(){
+  const rows=data.stations.map(s=>({...s,price:Number(s.prices?.[selected])})).filter(s=>Number.isFinite(s.price)&&s.price>0).sort((a,b)=>a.price-b.price);
+  document.querySelector("#count").textContent=rows.length;
+  document.querySelector("#lowest").textContent=rows.length?money(rows[0].price):"—";
+  document.querySelector("#average").textContent=rows.length?money(rows.reduce((a,s)=>a+s.price,0)/rows.length):"—";
+  document.querySelector("#stations").innerHTML=rows.length?rows.map(s=>'<tr><td><span class="station">'+escapeHtml(s.name)+'</span><span class="address">'+escapeHtml(s.address||"Тячів")+'</span></td><td><strong>'+money(s.price)+'</strong></td><td>'+escapeHtml(s.updatedAt||"—")+'</td><td>'+escapeHtml(s.source||"—")+'</td></tr>').join(""):'<tr><td colspan="4" class="empty">Немає підтверджених цін для цього виду пального.</td></tr>';
+  document.querySelector("#updated").textContent=data.updatedAt?"Оновлено: "+new Date(data.updatedAt).toLocaleString("uk-UA"):"Дані ще не завантажено";
+}
+function escapeHtml(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{selected=b.dataset.fuel;document.querySelectorAll(".tab").forEach(x=>x.setAttribute("aria-pressed",String(x===b)));render();}));
+fetch("./data/prices.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("No data");return r.json();}).then(d=>{data=d;render();}).catch(()=>render());
+</script>
+</body>
+</html>
