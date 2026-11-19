@@ -25,7 +25,7 @@ h2{font-size:21px;letter-spacing:-.3px;margin:0}.sub{font-size:13px;color:var(--
 .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap}.chosen-price{font-size:28px;font-weight:800;color:var(--green);white-space:nowrap}.chosen-price small{font-size:13px;color:var(--muted);font-weight:500}
 .chart-wrap{margin-top:14px;min-height:125px}.chart{width:100%;height:150px;display:block;overflow:visible}.chart-labels{display:flex;justify-content:space-between;color:var(--muted);font-size:11px}.chart-empty{background:#f7faf8;border-radius:12px;padding:20px;color:var(--muted);font-size:13px;text-align:center}
 .station-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:14px}
-.station{border:1px solid var(--line);border-radius:14px;padding:15px;display:flex;justify-content:space-between;gap:12px;align-items:center;background:white}
+.station{border:1px solid var(--line);border-radius:14px;padding:16px;background:white;box-shadow:0 3px 12px #153b2808}.station-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}.station-prices{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:13px}.station-price{background:#f5f8f6;border-radius:10px;padding:9px;text-align:center}.station-price b{display:block;font-size:16px;white-space:nowrap}.station-price span{font-size:11px;color:var(--muted)}.price-level{font-size:11px;color:#775b1c;background:#fff7e5;padding:4px 7px;border-radius:7px;display:inline-block;margin-top:8px}.station-unavailable{font-size:13px;color:var(--muted);padding:10px 0 0}
 .station-name{font-weight:750}.station-address{font-size:13px;color:var(--muted);margin-top:3px}.map-link{font-size:13px;font-weight:700;color:var(--green2);text-decoration:none;white-space:nowrap}.map-link:hover{text-decoration:underline}
 .section{margin-top:28px}.section-note{font-size:13px;color:var(--muted);margin:5px 0 0}
 .history-list{margin-top:13px;border-top:1px solid var(--line)}.history-row{display:flex;justify-content:space-between;gap:12px;padding:11px 2px;border-bottom:1px solid var(--line);font-size:13px}.history-row strong{font-size:14px}
@@ -59,7 +59,7 @@ footer{border-top:1px solid var(--line);padding:20px 0;color:var(--muted);font-s
   <div class="history-list" id="history-list"></div>
  </section>
  <section class="section">
-  <h2>Заправки у Тячеві</h2><p class="section-note">Місця розташування АЗС. Ціни конкретних заправок наразі не отримуються.</p>
+  <h2>Ціни на кожній заправці</h2><p class="section-note">Порівнюй доступні ціни заправок. Якщо окрема ціна АЗС відсутня, показуємо ціну мережі з відповідним підписом.</p>
   <div class="station-grid" id="stations"><div class="empty">Завантажуємо список АЗС…</div></div>
  </section>
  <p class="source">Джерело середніх цін: <a href="https://20.com.ua/" target="_blank" rel="noopener">Пальне UA</a>. Розташування заправок: OpenStreetMap contributors. Дані оновлюються автоматично приблизно щогодини. Перед заправкою перевіряй ціну безпосередньо на АЗС.</p>
@@ -96,10 +96,23 @@ function renderHistory(){
 }
 function renderStations(){
  const stations=Array.isArray(data.stations)?data.stations:[];
+ const networkPrices=data.networkPrices||{};
+ const brandKey=name=>{
+  const n=String(name||"").toLowerCase();
+  if(n.includes("ukrnafta")||n.includes("укрнафта"))return "ukrnafta";
+  if(n.includes("wog"))return "wog";
+  if(n.includes("okko")||n.includes("окко"))return "okko";
+  if(n.includes("upg"))return "upg";
+  if(n.includes("брсм")||n.includes("brsm"))return "brsm";
+  return "";
+ };
  document.querySelector("#stations").innerHTML=stations.length?stations.map(s=>{
-  const coords=Number(s.latitude)+","+Number(s.longitude);
+  const key=brandKey(s.name), prices=networkPrices[key]||{};
   const link=Number.isFinite(Number(s.latitude))&&Number.isFinite(Number(s.longitude))?'https://www.openstreetmap.org/?mlat='+encodeURIComponent(s.latitude)+'&mlon='+encodeURIComponent(s.longitude)+'#map=17/'+encodeURIComponent(s.latitude)+'/'+encodeURIComponent(s.longitude):'';
-  return '<article class="station"><div><div class="station-name">'+safe(s.name)+'</div><div class="station-address">'+safe(s.address||"Тячів")+'</div></div>'+(link?'<a class="map-link" href="'+link+'" target="_blank" rel="noopener">На мапі ↗</a>':'')+'</article>';
+  const fuels=[["A95","А-95"],["A95_PLUS","А-95+"],["DIESEL","ДП"],["LPG","Газ"]];
+  const available=fuels.filter(([code])=>Number(prices[code])>0);
+  const priceHtml=available.length?'<div class="station-prices">'+available.map(([code,label])=>'<div class="station-price"><span>'+label+'</span><b>'+money(prices[code])+'</b><span>грн/л</span></div>').join("")+'</div><div class="price-level">Ціна мережі · не окрема колонка</div>':'<div class="station-unavailable">Ціна мережі поки не надана джерелом — не підміняємо її середньою по області.</div>';
+  return '<article class="station"><div class="station-top"><div><div class="station-name">'+safe(s.name)+'</div><div class="station-address">'+safe(s.address||"Тячів")+'</div></div>'+(link?'<a class="map-link" href="'+link+'" target="_blank" rel="noopener">Мапа ↗</a>':'')+'</div>'+priceHtml+'</article>';
  }).join(""):'<div class="empty">Список АЗС тимчасово недоступний.</div>';
 }
 document.querySelectorAll(".fuel-card").forEach(card=>card.addEventListener("click",()=>{selected=card.dataset.fuel;renderPrices();renderHistory();}));
