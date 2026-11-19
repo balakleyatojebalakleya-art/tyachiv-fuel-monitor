@@ -2,60 +2,78 @@
 <html lang="uk">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#173d32"><meta name="description" content="Особистий календар платежів і щомісячних справ.">
+<meta name="theme-color" content="#163d32"><meta name="description" content="Особистий календар платежів і щомісячних справ.">
 <link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg" type="image/svg+xml">
 <title>Мої платежі</title>
 <style>
-:root{color-scheme:light;--bg:#f3f6f4;--card:#fff;--ink:#192720;--muted:#6d7c73;--line:#e4ebe6;--green:#1d6348;--pale:#e9f4ed;--orange:#fff4df}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 system-ui,-apple-system,"Segoe UI",sans-serif}
-header{background:linear-gradient(130deg,#14372d,#267151);color:white;padding:28px 0 38px}.wrap{width:min(760px,calc(100% - 28px));margin:auto}
-.brand{display:flex;align-items:center;gap:13px}.logo{width:48px;height:48px;border-radius:15px;background:#ffffff20;display:grid;place-items:center;font-size:25px}h1{font-size:clamp(28px,6vw,36px);line-height:1.1;margin:0;letter-spacing:-.7px}header p{margin:7px 0 0;color:#d9ebe1}
-main{padding:22px 0 48px}.today{color:var(--muted);font-size:13px;margin-bottom:14px}
-.summary{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}.stat{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px}.stat small{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:24px;margin-top:4px;letter-spacing:-.5px}
-.section-title{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:24px 0 11px}h2{font-size:20px;margin:0}.hint{font-size:12px;color:var(--muted);margin:4px 0 0}
-.task{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;margin:10px 0;display:flex;gap:12px;align-items:flex-start;box-shadow:0 3px 12px #163c2910}.task.done{opacity:.68}.task.done .task-name{text-decoration:line-through}.task-icon{width:42px;height:42px;border-radius:13px;background:var(--pale);display:grid;place-items:center;font-size:21px;flex:none}.task-content{flex:1;min-width:0}.task-top{display:flex;justify-content:space-between;gap:8px;align-items:start}.task-name{font-weight:750}.task-date{font-size:12px;color:var(--muted);margin-top:3px}.amount{font-weight:800;white-space:nowrap}.tag{display:inline-block;font-size:11px;padding:4px 8px;border-radius:20px;background:#f0f3f1;color:#59675f;margin-top:8px}.tag.soon{background:var(--orange);color:#855b12}.tag.done-tag{background:var(--pale);color:var(--green)}
-button{font:inherit;cursor:pointer}.done-btn{border:1px solid #cbd9d0;background:white;color:var(--green);border-radius:10px;padding:8px 11px;font-size:13px;font-weight:700;margin-top:10px}.done-btn:hover{background:var(--pale)}.done .done-btn{background:var(--pale)}
-.notice{background:var(--orange);border:1px solid #f0dfbd;border-radius:14px;padding:12px 14px;font-size:13px;color:#70541e;margin-top:18px}
-.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}.secondary{border:1px solid var(--line);background:white;border-radius:11px;padding:10px 13px;color:var(--ink);font-size:13px;font-weight:650}
-footer{color:var(--muted);font-size:12px;padding:18px 0;border-top:1px solid var(--line)}
-@media(max-width:420px){.task{padding:13px}.summary{gap:8px}.stat{padding:12px}.stat strong{font-size:21px}.task-icon{width:38px;height:38px}}
+:root{color-scheme:light;--bg:#f3f6f4;--card:#fff;--ink:#172820;--muted:#718078;--line:#e4ebe6;--green:#176344;--deep:#15392e;--mint:#e6f5eb;--blue:#eaf3ff;--amber:#fff3df;--purple:#f2edff;--shadow:0 10px 28px #183c2910}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 90% 0%,#e3f1e8 0,transparent 34%),var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}.wrap{width:min(780px,calc(100% - 28px));margin:auto}
+header{color:white;background:linear-gradient(125deg,#102d25 0%,#176044 62%,#2d8059 100%);padding:25px 0 68px;position:relative;overflow:hidden}header:after{content:"";position:absolute;width:260px;height:260px;border:1px solid #ffffff20;border-radius:50%;right:-75px;top:-130px;box-shadow:0 0 0 28px #ffffff08,0 0 0 58px #ffffff06}
+.brand{display:flex;align-items:center;gap:13px;position:relative;z-index:1}.logo{width:52px;height:52px;border-radius:17px;background:#ffffff20;border:1px solid #ffffff30;display:grid;place-items:center;font-size:26px;box-shadow:inset 0 1px #ffffff30}h1{font-size:clamp(29px,6vw,38px);line-height:1.08;margin:0;letter-spacing:-1px}header p{margin:7px 0 0;color:#d7e9df;font-size:14px}.today{margin-top:22px;color:#e1f0e6;font-size:13px;position:relative;z-index:1}
+main{padding:0 0 42px;margin-top:-42px;position:relative;z-index:2}.hero{background:linear-gradient(135deg,#fff,#f9fffb);border:1px solid #e0ebe3;border-radius:22px;padding:19px;box-shadow:var(--shadow)}
+.hero-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.eyebrow{font-size:11px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:var(--green)}.hero h2{font-size:21px;line-height:1.2;margin:4px 0 0;letter-spacing:-.4px}.month{font-size:12px;color:var(--muted);background:#f0f5f1;border-radius:20px;padding:6px 10px;white-space:nowrap}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:17px}.stat{border-radius:15px;padding:13px 14px;background:#f3f8f4}.stat.money{background:#fff5e7}.stat small{display:block;font-size:11px;color:var(--muted);font-weight:650}.stat strong{display:block;font-size:23px;line-height:1.25;margin-top:3px;letter-spacing:-.5px}.stat.money strong{color:#9a6416}
+.progress-head{display:flex;justify-content:space-between;gap:10px;margin:17px 0 7px;font-size:12px}.progress-head span:last-child{font-weight:800;color:var(--green)}.progress{height:9px;background:#e7eee9;border-radius:20px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#269a65,#78c995);border-radius:20px;transition:width .25s}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin:25px 2px 10px}h3{font-size:19px;margin:0;letter-spacing:-.3px}.hint{font-size:12px;color:var(--muted);margin:3px 0 0}.count{font-size:11px;font-weight:750;color:var(--green);background:var(--mint);padding:5px 9px;border-radius:20px;white-space:nowrap}
+.day-group{margin:15px 0 19px}.day-heading{display:flex;align-items:center;gap:10px;margin:0 3px 9px}.day-number{width:42px;height:42px;border-radius:14px;background:var(--deep);color:white;display:grid;place-items:center;font-size:17px;font-weight:850;box-shadow:0 5px 12px #15392e22}.day-label{font-weight:800;font-size:14px}.day-caption{font-size:11px;color:var(--muted)}
+.task{display:flex;gap:12px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:17px;padding:13px;margin:8px 0;box-shadow:0 4px 14px #183c2908;transition:transform .15s,border-color .15s}.task:active{transform:scale(.99)}.task.done{background:#f8fbf9;box-shadow:none}.task-icon{width:44px;height:44px;flex:none;border-radius:14px;display:grid;place-items:center;font-size:21px}.water{background:var(--blue)}.bill{background:var(--purple)}.payment{background:var(--amber)}.gas{background:#fff0e8}.light{background:#fff9d9}
+.task-content{min-width:0;flex:1}.task-name{font-size:14px;font-weight:780;line-height:1.25}.task.done .task-name{text-decoration:line-through;color:#78867e}.task-meta{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:5px}.status{font-size:11px;color:#6b786f}.pill{font-size:10px;font-weight:750;border-radius:20px;padding:3px 7px;background:#f0f3f1;color:#65736b}.pill.today{background:#fff0d7;color:#986116}.pill.done{background:#e3f4e9;color:#176344}.amount{font-size:13px;font-weight:850;color:#966016;white-space:nowrap;margin-left:auto}
+.done-btn{flex:none;border:1px solid #c9ddd0;background:#fff;color:#176344;border-radius:11px;padding:8px 10px;font-size:11px;font-weight:800;min-width:91px}.done-btn:hover{background:var(--mint)}.task.done .done-btn{background:#e7f5eb;border-color:#d4e9da;color:#176344}
+.note{display:flex;gap:11px;background:#edf4ff;border:1px solid #dce9fa;border-radius:16px;padding:13px 14px;color:#435b78;font-size:12px;margin-top:21px}.note b{display:block;color:#294a72;margin-bottom:2px}.note-icon{font-size:20px}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.secondary{border:1px solid var(--line);background:#fff;border-radius:11px;padding:10px 13px;color:#536158;font-size:12px;font-weight:700}.secondary:hover{background:#f7faf8}
+footer{color:var(--muted);font-size:11px;padding:17px 0 24px;text-align:center}
+@media(max-width:450px){header{padding-top:22px}.hero{padding:16px;border-radius:19px}.stats{gap:8px}.stat{padding:11px}.stat strong{font-size:21px}.task{gap:9px;padding:11px}.task-icon{width:39px;height:39px;border-radius:12px}.done-btn{min-width:80px;padding:8px 7px;font-size:10px}.day-number{width:39px;height:39px}}
 </style></head>
 <body>
-<header><div class="wrap"><div class="brand"><div class="logo">📅</div><div><h1>Мої платежі</h1><p>Твій особистий календар щомісячних справ</p></div></div></div></header>
+<header><div class="wrap"><div class="brand"><div class="logo">📅</div><div><h1>Мої платежі</h1><p>Усі важливі справи — під контролем</p></div></div><div class="today" id="today"></div></div></header>
 <main class="wrap">
-<div class="today" id="today"></div>
-<div class="summary"><div class="stat"><small>Найближчий платіж / справа</small><strong id="next-date">—</strong></div><div class="stat"><small>Фіксована сума на місяць</small><strong>4 000 грн</strong></div></div>
-<div class="section-title"><div><h2>Щомісячні нагадування</h2><p class="hint">Натискай «Виконано» після кожної справи</p></div></div>
+<section class="hero">
+ <div class="hero-top"><div><div class="eyebrow">Твій місячний план</div><h2>Нічого не забудь цього місяця ✨</h2></div><div class="month" id="month"></div></div>
+ <div class="stats">
+  <div class="stat"><small>Найближча дата</small><strong id="next-date">—</strong></div>
+  <div class="stat money"><small>Фіксована оплата</small><strong>4 000 ₴</strong></div>
+ </div>
+ <div class="progress-head"><span>Виконано справ цього місяця</span><span id="progress-label">0 з 5</span></div><div class="progress"><i id="progress-bar"></i></div>
+</section>
+<div class="section-head"><div><h3>Твій календар</h3><p class="hint">Позначай кожну справу після виконання</p></div><span class="count" id="left-count">5 справ</span></div>
 <div id="tasks"></div>
-<div class="notice"><strong>Про нагадування.</strong> Список і позначки зберігаються на цьому пристрої. Ця версія показує найближчі справи, але поки не надсилає гарантовані сповіщення, коли браузер повністю закритий. Відкривай додаток, щоб перевіряти календар.</div>
-<div class="actions"><button class="secondary" id="reset">Скинути позначки цього місяця</button><button class="secondary" id="install" hidden>Встановити додаток</button></div>
-</main><footer><div class="wrap">«Мої платежі» · Дані зберігаються локально в браузері цього пристрою.</div></footer>
+<div class="note"><div class="note-icon">🔔</div><div><b>Невелике нагадування</b>Позначки зберігаються на цьому пристрої. Додаток поки не надсилає гарантовані сповіщення, якщо його закрито. Відкривай календар, щоб перевіряти найближчі справи.</div></div>
+<div class="actions"><button class="secondary" id="reset">↺ Скинути позначки цього місяця</button><button class="secondary" id="install" hidden>＋ Встановити додаток</button></div>
+</main><footer><div class="wrap">«Мої платежі» · Твій особистий помічник</div></footer>
 <script>
 const tasks=[
-{id:"water",day:10,icon:"💧",name:"Передати показники води",kind:"Показники"},
-{id:"utilities",day:10,icon:"🧾",name:"Оплата комунальних послуг",kind:"Оплата"},
-{id:"payment",day:28,icon:"💳",name:"Оплата",amount:4000,kind:"Платіж"},
-{id:"gas",day:28,icon:"🔥",name:"Передати показники газу",kind:"Показники"},
-{id:"light",day:28,icon:"💡",name:"Передати показники світла",kind:"Показники"}
+{id:"water",day:10,icon:"💧",style:"water",name:"Передати показники води",kind:"Показники"},
+{id:"utilities",day:10,icon:"🧾",style:"bill",name:"Оплата комунальних послуг",kind:"Оплата"},
+{id:"payment",day:28,icon:"💳",style:"payment",name:"Оплата",amount:4000,kind:"Платіж"},
+{id:"gas",day:28,icon:"🔥",style:"gas",name:"Передати показники газу",kind:"Показники"},
+{id:"light",day:28,icon:"💡",style:"light",name:"Передати показники світла",kind:"Показники"}
 ];
-const monthKey=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
-const storageKey="my-payments-done-v1";
+const monthKey=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0"),storageKey="my-payments-done-v1";
 let done={};try{done=JSON.parse(localStorage.getItem(storageKey)||"{}")||{}}catch(e){done={}}
-const now=new Date();
+const now=new Date(),todayStart=new Date(now.getFullYear(),now.getMonth(),now.getDate()),mk=monthKey(now);
 document.querySelector("#today").textContent=now.toLocaleDateString("uk-UA",{weekday:"long",day:"numeric",month:"long",year:"numeric"});
-function dueDate(day,base=now){let d=new Date(base.getFullYear(),base.getMonth(),day);if(d<new Date(base.getFullYear(),base.getMonth(),base.getDate()))d=new Date(base.getFullYear(),base.getMonth()+1,day);return d}
+document.querySelector("#month").textContent=now.toLocaleDateString("uk-UA",{month:"long",year:"numeric"});
+function dueDate(day){let d=new Date(now.getFullYear(),now.getMonth(),day);if(d<todayStart)d=new Date(now.getFullYear(),now.getMonth()+1,day);return d}
 function fmt(d){return d.toLocaleDateString("uk-UA",{day:"numeric",month:"long"})}
+function dayDistance(d){return Math.round((new Date(d.getFullYear(),d.getMonth(),d.getDate())-todayStart)/86400000)}
 function render(){
- const mk=monthKey(now), list=tasks.map(t=>({...t,due:dueDate(t.day),isDone:!!done[mk+"-"+t.id]})).sort((a,b)=>a.due-b.due);
- const upcoming=list.find(t=>!t.isDone);
- document.querySelector("#next-date").textContent=upcoming?fmt(upcoming.due):"Усе виконано";
- document.querySelector("#tasks").innerHTML=list.map(t=>{
-  const key=mk+"-"+t.id, status=t.isDone?"Виконано":(t.due.toDateString()===now.toDateString()?"Сьогодні":("До "+fmt(t.due)));
-  return '<article class="task '+(t.isDone?"done":"")+'"><div class="task-icon">'+t.icon+'</div><div class="task-content"><div class="task-top"><div><div class="task-name">'+t.name+'</div><div class="task-date">Щомісяця, '+t.day+' числа</div></div>'+(t.amount?'<div class="amount">4 000 грн</div>':'')+'</div><span class="tag '+(t.isDone?"done-tag":(t.due.toDateString()===now.toDateString()?"soon":""))+'">'+status+'</span><br><button class="done-btn" data-key="'+key+'">'+(t.isDone?"Скасувати позначку":"✓ Виконано")+'</button></div></article>';
+ const list=tasks.map(t=>({...t,due:dueDate(t.day),isDone:!!done[mk+"-"+t.id]}));
+ const completed=list.filter(t=>t.isDone).length,remaining=list.length-completed,upcoming=list.filter(t=>!t.isDone).sort((a,b)=>a.due-b.due)[0];
+ document.querySelector("#next-date").textContent=upcoming?(dayDistance(upcoming.due)===0?"Сьогодні":fmt(upcoming.due)):"Усе готово!";
+ document.querySelector("#progress-label").textContent=completed+" з "+list.length;
+ document.querySelector("#progress-bar").style.width=(completed/list.length*100)+"%";
+ document.querySelector("#left-count").textContent=remaining?remaining+" залишилось":"Усе виконано ✓";
+ const groups=[10,28].map(day=>({day,items:list.filter(t=>t.day===day)}));
+ document.querySelector("#tasks").innerHTML=groups.map(g=>{
+  const d=dueDate(g.day),dist=dayDistance(d),caption=dist===0?"Сьогодні":dist===1?"Завтра":dist+" дн. до цієї дати";
+  return '<section class="day-group"><div class="day-heading"><div class="day-number">'+g.day+'</div><div><div class="day-label">'+(g.day===10?"Комунальні справи":"Платежі та показники")+'</div><div class="day-caption">'+caption+' · кожного місяця</div></div></div>'+
+  g.items.map(t=>{const key=mk+"-"+t.id,status=t.isDone?"Виконано":(dayDistance(t.due)===0?"Сьогодні":dayDistance(t.due)===1?"Завтра":"Заплановано");
+   return '<article class="task '+(t.isDone?"done":"")+'"><div class="task-icon '+t.style+'">'+t.icon+'</div><div class="task-content"><div class="task-name">'+t.name+'</div><div class="task-meta"><span class="status">Щомісяця, '+t.day+' числа</span><span class="pill '+(t.isDone?"done":dayDistance(t.due)<=1?"today":"")+'">'+status+'</span></div></div>'+(t.amount?'<div class="amount">4 000 ₴</div>':'')+'<button class="done-btn" data-key="'+key+'">'+(t.isDone?"✓ Готово":"✓ Виконано")+'</button></article>';
+  }).join("")+'</section>';
  }).join("");
  document.querySelectorAll("[data-key]").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.key;if(done[k])delete done[k];else done[k]=true;localStorage.setItem(storageKey,JSON.stringify(done));render()}));
 }
-document.querySelector("#reset").addEventListener("click",()=>{if(!confirm("Скинути всі позначки виконання за цей місяць?"))return;const prefix=monthKey(now)+"-";Object.keys(done).filter(k=>k.startsWith(prefix)).forEach(k=>delete done[k]);localStorage.setItem(storageKey,JSON.stringify(done));render()});
+document.querySelector("#reset").addEventListener("click",()=>{if(!confirm("Скинути всі позначки виконання за цей місяць?"))return;const prefix=mk+"-";Object.keys(done).filter(k=>k.startsWith(prefix)).forEach(k=>delete done[k]);localStorage.setItem(storageKey,JSON.stringify(done));render()});
 render();
 let installPrompt;window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();installPrompt=e;const b=document.querySelector("#install");b.hidden=false;b.onclick=async()=>{installPrompt.prompt();await installPrompt.userChoice;installPrompt=null;b.hidden=true}});
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}));
